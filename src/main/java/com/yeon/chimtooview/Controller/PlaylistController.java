@@ -258,4 +258,14 @@ public class PlaylistController {
 
         return ResponseEntity.ok(result);
     }
+
+    @RequestMapping(
+            value = "/deletePlaylistAll",
+            method = RequestMethod.DELETE
+    )
+    public ResponseEntity deletePlaylistAll() {
+        playlistService.deletePlaylistAll();
+
+        return ResponseEntity.ok("COMPLETE");
+    }
 }

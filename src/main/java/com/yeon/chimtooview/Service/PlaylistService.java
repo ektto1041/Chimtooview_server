@@ -118,4 +118,8 @@ public class PlaylistService extends QuerydslRepositorySupport {
 
         return result;
     }
+
+    public void deletePlaylistAll() {
+        playlistRepository.deleteAll();
+    }
 }

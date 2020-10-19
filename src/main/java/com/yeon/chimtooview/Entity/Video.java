@@ -1,5 +1,6 @@
 package com.yeon.chimtooview.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yeon.chimtooview.Dto.VideoDto;
 import lombok.*;
@@ -43,6 +44,10 @@ public class Video {
     @Column(name = "VIEW_LIKE_GAP")
     private int viewLikeGap;
 
+    @OneToOne(mappedBy = "video", cascade = CascadeType.REMOVE)
+    @JsonBackReference
+    private VideoThumbnail videoThumbnail;
+
     @ManyToOne
     @JoinColumn(name = "PLAYLIST_ID")
     @JsonManagedReference
@@ -68,22 +73,6 @@ public class Video {
         dto.setPlaylistTitle(playlist.getTitle());
 
         dto.setPlaylistDto(null);
-
-        return dto;
-    }
-
-    // Playlist 정보가 포함되는 Dto
-    public VideoDto toDtoWithPlaylist() {
-        VideoDto dto = new VideoDto();
-        dto.setId(id);
-        dto.setTitle(title);
-        dto.setPublishedAt(publishedAt);
-        dto.setViewCount(viewCount);
-        dto.setCommentCount(commentCount);
-        dto.setLikeCount(likeCount);
-        dto.setDislikeCount(dislikeCount);
-
-        dto.setPlaylistDto(playlist.toDto());
 
         return dto;
     }

@@ -43,6 +43,10 @@ public class Playlist {
     @Column(name = "DISLIKE_COUNT_AVG")
     private double dislikeCountAvg;
 
+    @OneToOne(mappedBy = "playlist", cascade = CascadeType.REMOVE)
+    @JsonBackReference
+    private PlaylistThumbnail playlistThumbnail;
+
     @OneToMany(mappedBy = "playlist", cascade = CascadeType.REMOVE)
     @JsonBackReference
     private List<Video> videoList = new ArrayList<>();
