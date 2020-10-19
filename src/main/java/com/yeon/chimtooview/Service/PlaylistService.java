@@ -121,5 +121,7 @@ public class PlaylistService extends QuerydslRepositorySupport {
 
     public void deletePlaylistAll() {
         playlistRepository.deleteAll();
+
+        System.out.println("### DELETE" );
     }
 }

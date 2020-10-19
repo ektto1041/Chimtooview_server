@@ -24,7 +24,7 @@ public class Video {
     @Column(name = "PUBLISHED_AT")
     private LocalDateTime publishedAt;
     @Column(name = "DURATION")
-    private String duration;
+    private int duration;
 
     @Column(name = "VIEW_COUNT")
     private int viewCount;

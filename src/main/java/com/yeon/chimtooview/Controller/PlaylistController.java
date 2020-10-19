@@ -193,7 +193,7 @@ public class PlaylistController {
             method = RequestMethod.POST
     )
     public ResponseEntity postPlaylistAll(@RequestBody List<PlaylistDto> playlistDtoList) {
-        System.out.println(playlistDtoList.toString());
+        playlistService.deletePlaylistAll();
 
         List<Playlist> savedPlaylistList = new ArrayList<>();
         for(PlaylistDto playlistDto : playlistDtoList) {

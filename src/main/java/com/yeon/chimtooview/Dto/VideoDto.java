@@ -16,7 +16,7 @@ public class VideoDto {
 
     private String title;
     private LocalDateTime publishedAt;
-    private String duration;
+    private int duration;
 
     private int viewCount;
     private int commentCount;
