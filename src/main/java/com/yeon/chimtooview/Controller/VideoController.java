@@ -46,6 +46,33 @@ public class VideoController {
     }
 
     @RequestMapping(
+            value = "/getVideoAllForTopFive",
+            method = RequestMethod.GET
+    )
+    public ResponseEntity getVideoAllForTopFive() {
+        List<List<Video>> topFiveVideoList = videoService.getVideoAllForTopFive();
+
+        List<List<VideoDto>> result = new ArrayList<>();
+        for(List<Video> videoList : topFiveVideoList) {
+
+            List<VideoDto> videoDtoList = new ArrayList<>();
+            for(Video video : videoList) {
+                VideoDto videoDto = video.toDto();
+
+                ThumbnailDto thumbnailDto = videoThumbnailService.getVideoThumbnailByVideo(video).toDto();
+
+                videoDto.setThumbnails(thumbnailDto);
+
+                videoDtoList.add(videoDto);
+            }
+
+            result.add(videoDtoList);
+        }
+
+        return ResponseEntity.ok(result);
+    }
+
+    @RequestMapping(
             value = "/getVideoAllCountByFilter/{searchWord}/{searchWordPlaylist}",
             method = RequestMethod.GET
     )

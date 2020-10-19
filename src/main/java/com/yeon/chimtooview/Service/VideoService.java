@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +24,34 @@ public class VideoService extends QuerydslRepositorySupport {
 
     public List<Video> getVideoAll() {
         return videoRepository.findAll();
+    }
+
+    // 요약 화면의 TopFive 를 구성하기 위해 DB에서 Sort하여 Data를 가져오는 Service
+    public List<List<Video>> getVideoAllForTopFive() {
+        /**
+         *   VIEW_COUNT: 0,
+         *   LIKE_COUNT: 1,
+         *   DISLIKE_COUNT: 2,
+         *   LIKE_RATE: 3,
+         *   LIKE_GAP: 4,
+         *   VIEW_LIKE_RATE: 5,
+         *   VIEW_LIKE_GAP: 6,
+         *   DATE: 7,
+         */
+        QVideo qVideo = QVideo.video;
+
+        List<List<Video>> topFiveVideoList = new ArrayList<>();
+
+        topFiveVideoList.add(from(qVideo).orderBy(qVideo.viewCount.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).orderBy(qVideo.likeCount.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).orderBy(qVideo.dislikeCount.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).orderBy(qVideo.likeRate.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).orderBy(qVideo.likeGap.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).orderBy(qVideo.viewLikeRate.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).orderBy(qVideo.viewLikeGap.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).orderBy(qVideo.publishedAt.desc()).limit(5).fetch());
+
+        return topFiveVideoList;
     }
 
     public List<Video> getVideoAllByPlaylist(Playlist playlist) {
