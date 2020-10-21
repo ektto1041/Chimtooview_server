@@ -9,10 +9,7 @@ import com.yeon.chimtooview.Entity.Video;
 import com.yeon.chimtooview.Entity.VideoThumbnail;
 import com.yeon.chimtooview.Exceptions.ExceptionMessage;
 import com.yeon.chimtooview.Exceptions.NotFoundPlaylistException;
-import com.yeon.chimtooview.Service.PlaylistService;
-import com.yeon.chimtooview.Service.PlaylistThumbnailService;
-import com.yeon.chimtooview.Service.VideoService;
-import com.yeon.chimtooview.Service.VideoThumbnailService;
+import com.yeon.chimtooview.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +30,9 @@ public class PlaylistController {
 
     @Autowired
     private VideoThumbnailService videoThumbnailService;
+
+    @Autowired
+    private ReloadService reloadService;
 
     @RequestMapping(
             value = "/getPlaylistAll",
@@ -264,6 +264,9 @@ public class PlaylistController {
             method = RequestMethod.DELETE
     )
     public ResponseEntity deletePlaylistAll() {
+        // 데이터 갱신 시각 기록
+        reloadService.postReload();
+
         playlistService.deletePlaylistAll();
 
         return ResponseEntity.ok("COMPLETE");
