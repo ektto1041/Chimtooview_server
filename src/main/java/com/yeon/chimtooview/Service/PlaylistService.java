@@ -91,7 +91,7 @@ public class PlaylistService extends QuerydslRepositorySupport {
             }
 
             orderSpecifier = (order == 0) ? numberPath.asc() : numberPath.desc();
-        } else if(category == 7) {  // 날짜
+        } else if(category == 0) {  // 날짜
             orderSpecifier = (order == 0) ? qPlaylist.publishedAt.asc() : qPlaylist.publishedAt.desc();
         }
 

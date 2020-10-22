@@ -28,7 +28,7 @@ public class ReloadService {
         reloadRepository.deleteAll();
 
         Reload reload = new Reload();
-        reload.setTime(LocalDateTime.now());
+        reload.setTime(LocalDateTime.now().plusHours(9));
 
         reloadRepository.save(reload);
     }
