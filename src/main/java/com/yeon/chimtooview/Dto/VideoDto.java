@@ -23,10 +23,11 @@ public class VideoDto {
     private int likeCount;
     private int dislikeCount;
 
-    private double likeRate;
-    private int likeGap;
+    private double likeDislikeRate;
+    private int likeDislikeGap;
     private double viewLikeRate;
     private int viewLikeGap;
+    private double likeDurationRate;
 
     private ThumbnailDto thumbnails;
 
@@ -45,10 +46,11 @@ public class VideoDto {
         entity.setLikeCount(likeCount);
         entity.setDislikeCount(dislikeCount);
         // 이 메소드는 처음 데이터를 디비에 입력할 때만 호출되므로 2차 수치들은 여기서 작업을 해줘야 함
-        entity.setLikeRate((dislikeCount == 0 ? 0 : ((double)likeCount / dislikeCount)));
-        entity.setLikeGap(likeCount - dislikeCount);
+        entity.setLikeDislikeRate((dislikeCount == 0 ? 0 : ((double)likeCount / dislikeCount)));
+        entity.setLikeDislikeGap(likeCount - dislikeCount);
         entity.setViewLikeRate((viewCount == 0 ? 0 : ((double)likeCount / viewCount)));
         entity.setViewLikeGap(viewCount - likeCount);
+        entity.setLikeDurationRate(duration == 0 ? 0 : ((double)likeCount / duration));
 
         return entity;
     }

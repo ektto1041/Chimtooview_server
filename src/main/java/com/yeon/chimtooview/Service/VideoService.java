@@ -8,6 +8,7 @@ import com.yeon.chimtooview.Entity.Playlist;
 import com.yeon.chimtooview.Entity.QVideo;
 import com.yeon.chimtooview.Entity.Video;
 import com.yeon.chimtooview.Repository.VideoRepository;
+import com.yeon.chimtooview.Util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Service;
@@ -28,28 +29,30 @@ public class VideoService extends QuerydslRepositorySupport {
 
     // 요약 화면의 TopFive 를 구성하기 위해 DB에서 Sort하여 Data를 가져오는 Service
     public List<List<Video>> getVideoAllForTopFive() {
-        /**
-         *   VIEW_COUNT: 0,
-         *   LIKE_COUNT: 1,
-         *   DISLIKE_COUNT: 2,
-         *   LIKE_RATE: 3,
-         *   LIKE_GAP: 4,
-         *   VIEW_LIKE_RATE: 5,
-         *   VIEW_LIKE_GAP: 6,
-         *   DATE: 7,
-         */
+        // TODO 이거 개선하자 아니면 아예 요약 페이지를 바꿔버리자
+//        DATE: 0,
+//        VIEW_COUNT: 1,
+//        LIKE_COUNT: 2,
+//        DISLIKE_COUNT: 3,
+//        LENGTH: 4, --- 제외
+//        LIKE_RATE: 5,
+//        LIKE_GAP: 6,
+//        VIEW_LIKE_RATE: 7,
+//        VIEW_LIKE_GAP: 8,
+//        LIKE_LENGTH_RATE: 9, --- 제외
+
         QVideo qVideo = QVideo.video;
 
         List<List<Video>> topFiveVideoList = new ArrayList<>();
 
+        topFiveVideoList.add(from(qVideo).orderBy(qVideo.publishedAt.desc()).limit(5).fetch());
         topFiveVideoList.add(from(qVideo).orderBy(qVideo.viewCount.desc()).limit(5).fetch());
         topFiveVideoList.add(from(qVideo).orderBy(qVideo.likeCount.desc()).limit(5).fetch());
         topFiveVideoList.add(from(qVideo).orderBy(qVideo.dislikeCount.desc()).limit(5).fetch());
-        topFiveVideoList.add(from(qVideo).orderBy(qVideo.likeRate.desc()).limit(5).fetch());
-        topFiveVideoList.add(from(qVideo).orderBy(qVideo.likeGap.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).orderBy(qVideo.likeDislikeRate.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).orderBy(qVideo.likeDislikeGap.desc()).limit(5).fetch());
         topFiveVideoList.add(from(qVideo).orderBy(qVideo.viewLikeRate.desc()).limit(5).fetch());
         topFiveVideoList.add(from(qVideo).orderBy(qVideo.viewLikeGap.desc()).limit(5).fetch());
-        topFiveVideoList.add(from(qVideo).orderBy(qVideo.publishedAt.desc()).limit(5).fetch());
 
         return topFiveVideoList;
     }
@@ -80,36 +83,42 @@ public class VideoService extends QuerydslRepositorySupport {
         QVideo qVideo = QVideo.video;
         OrderSpecifier orderSpecifier = null;
 
-        if(category >= 0 && category <= 6) {
+        if(category == Constants.DATE) {
+            orderSpecifier = (order == 0) ? qVideo.publishedAt.asc() : qVideo.publishedAt.desc();
+        } else if(category > Constants.DATE) {
             NumberPath numberPath = null;
 
             switch (category) {
-                case 0: // 조회수
+                case Constants.VIEW_COUNT:
                     numberPath = qVideo.viewCount;
                     break;
-                case 1: // 좋아요
+                case Constants.LIKE_COUNT:
                     numberPath = qVideo.likeCount;
                     break;
-                case 2: // 싫어요
+                case Constants.DISLIKE_COUNT:
                     numberPath = qVideo.dislikeCount;
                     break;
-                case 3: // 좋싫비
-                    numberPath = qVideo.likeRate;
+                case Constants.DURATION:
+                    numberPath = qVideo.duration;
                     break;
-                case 4: // 좋싫차
-                    numberPath = qVideo.likeGap;
+                case Constants.LIKE_DISLIKE_RATE:
+                    numberPath = qVideo.likeDislikeRate;
                     break;
-                case 5: // 조좋비
+                case Constants.LIKE_DISLIKE_GAP:
+                    numberPath = qVideo.likeDislikeGap;
+                    break;
+                case Constants.VIEW_LIKE_RATE:
                     numberPath = qVideo.viewLikeRate;
                     break;
-                case 6: // 조좋차
+                case Constants.VIEW_LIKE_GAP:
                     numberPath = qVideo.viewLikeGap;
+                    break;
+                case Constants.LIKE_DURATION_RATE:
+                    numberPath = qVideo.likeDurationRate;
                     break;
             }
 
             orderSpecifier = (order == 0) ? numberPath.asc() : numberPath.desc();
-        } else if(category == 7) {  // 날짜
-            orderSpecifier = (order == 0) ? qVideo.publishedAt.asc() : qVideo.publishedAt.desc();
         }
 
         JPQLQuery<Video> query = from(qVideo).orderBy(orderSpecifier).offset(50 * (pageCurrent-1)).limit(50);

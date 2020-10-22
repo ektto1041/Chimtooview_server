@@ -36,13 +36,15 @@ public class Video {
     private int dislikeCount;
 
     @Column(name = "LIKE_RATE")
-    private double likeRate;
+    private double likeDislikeRate;
     @Column(name = "LIKE_GAP")
-    private int likeGap;
+    private int likeDislikeGap;
     @Column(name = "VIEW_LIKE_RATE")
     private double viewLikeRate;
     @Column(name = "VIEW_LIKE_GAP")
     private int viewLikeGap;
+    @Column(name = "LIKE_DURATION_RATE")
+    private double likeDurationRate;
 
     @OneToOne(mappedBy = "video", cascade = CascadeType.REMOVE)
     @JsonBackReference
@@ -64,10 +66,11 @@ public class Video {
         dto.setCommentCount(commentCount);
         dto.setLikeCount(likeCount);
         dto.setDislikeCount(dislikeCount);
-        dto.setLikeRate(likeRate);
-        dto.setLikeGap(likeGap);
+        dto.setLikeDislikeRate(likeDislikeRate);
+        dto.setLikeDislikeGap(likeDislikeGap);
         dto.setViewLikeRate(viewLikeRate);
         dto.setViewLikeGap(viewLikeGap);
+        dto.setLikeDurationRate(likeDurationRate);
 
         dto.setPlaylistId(playlist.getId());
         dto.setPlaylistTitle(playlist.getTitle());
