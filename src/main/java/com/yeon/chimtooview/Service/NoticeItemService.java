@@ -34,7 +34,7 @@ public class NoticeItemService extends QuerydslRepositorySupport {
         noticeItem.setTitle(newNoticeItem.get(0));
         noticeItem.setContent(newNoticeItem.get(1));
         noticeItem.setType(newNoticeItem.get(2));
-        noticeItem.setPublishedAt(LocalDateTime.now());
+        noticeItem.setPublishedAt(LocalDateTime.now().plusHours(9));
 
         return noticeItemRepository.save(noticeItem);
     }
