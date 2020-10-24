@@ -82,10 +82,7 @@ public class BoardItemService extends QuerydslRepositorySupport {
         BoardItem boardItem = boardItemRepository.findById(id).orElse(null);
         if(boardItem == null) throw new NotFoundBoardItemException(ExceptionMessage.NF_BOARD_ITEM);
 
-        // 조회수 증가
-        boardItem.setViewCount(boardItem.getViewCount() + 1);
-
-        return boardItemRepository.save(boardItem);
+        return boardItem;
     }
 
 
@@ -111,5 +108,41 @@ public class BoardItemService extends QuerydslRepositorySupport {
         boardItem.setPublishedAt(LocalDateTime.now().plusHours(9));
 
         return boardItemRepository.save(boardItem);
+    }
+
+    /**
+     * UPDATE
+     */
+
+    /**
+     * BoardItem의 조회수 증가
+     * @param boardItem
+     * BoardItem
+     * @return
+     * BoardItem
+     */
+    public BoardItem viewBoardItem(BoardItem boardItem) {
+        // 조회수 증가
+        boardItem.setViewCount(boardItem.getViewCount() + 1);
+
+        return boardItemRepository.save(boardItem);
+    }
+
+    /**
+     *  DELETE
+     */
+
+    /**
+     * 글 삭제
+     * @param id
+     * long
+     * @return
+     * void
+     */
+    public void deleteBoardItemById(long id) throws NotFoundBoardItemException {
+        BoardItem boardItem = boardItemRepository.findById(id).orElse(null);
+        if(boardItem == null) throw new NotFoundBoardItemException(ExceptionMessage.NF_BOARD_ITEM);
+
+        boardItemRepository.delete(boardItem);
     }
 }

@@ -46,10 +46,13 @@ public class BoardItem {
         BoardItemDto dto = new BoardItemDto();
         dto.setId(id);
         dto.setUserId(userId);
+        dto.setUserPw(userPw);
+        dto.setSalt(salt);
         dto.setPublishedAt(publishedAt);
         dto.setTitle(title);
         dto.setContent(content);
         dto.setViewCount(viewCount);
+        dto.setCommentItemCount(commentItemList.size());
 
         return dto;
     }

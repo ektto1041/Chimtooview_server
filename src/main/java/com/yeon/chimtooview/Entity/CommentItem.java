@@ -1,6 +1,7 @@
 package com.yeon.chimtooview.Entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.yeon.chimtooview.Dto.CommentItemDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,11 +29,23 @@ public class CommentItem {
     @Column(name = "PUBLISHED_AT")
     private LocalDateTime publishedAt;
 
-    @Column(name = "CONTENT", columnDefinition = "TEXT")
+    @Column(name = "CONTENT")
     private String content;
 
     @ManyToOne
     @JoinColumn(name = "BOARD_ITEM_ID")
     @JsonManagedReference
     private BoardItem boardItem;
+
+    public CommentItemDto toDto() {
+        CommentItemDto dto = new CommentItemDto();
+        dto.setId(id);
+        dto.setUserId(userId);
+        dto.setUserPw(userPw);
+        dto.setSalt(salt);
+        dto.setPublishedAt(publishedAt);
+        dto.setContent(content);
+
+        return dto;
+    }
 }

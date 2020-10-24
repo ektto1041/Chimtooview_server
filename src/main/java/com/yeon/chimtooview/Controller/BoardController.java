@@ -1,7 +1,9 @@
 package com.yeon.chimtooview.Controller;
 
 import com.yeon.chimtooview.Dto.BoardItemDto;
+import com.yeon.chimtooview.Dto.CommentItemDto;
 import com.yeon.chimtooview.Entity.BoardItem;
+import com.yeon.chimtooview.Entity.CommentItem;
 import com.yeon.chimtooview.Exceptions.NotFoundBoardItemException;
 import com.yeon.chimtooview.Service.BoardItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +61,15 @@ public class BoardController {
         for(BoardItem boardItem : boardItemList) {
             BoardItemDto boardItemDto = boardItem.toDto();
 
+            List<CommentItemDto> commentItemDtoList = new ArrayList<>();
+            for(CommentItem commentItem : boardItem.getCommentItemList()) {
+                CommentItemDto commentItemDto = commentItem.toDto();
+
+                commentItemDtoList.add(commentItemDto);
+            }
+
+            boardItemDto.setCommentItemList(commentItemDtoList);
+
             result.add(boardItemDto);
         }
 
@@ -66,7 +77,7 @@ public class BoardController {
     }
 
     /**
-     * 게시판 id로 글 하나 가져오기
+     * 게시판 id로 글 하나 + 그 글의 댓글 전부 가져오기
      * @param id
      * 글 id
      * @return
@@ -80,7 +91,9 @@ public class BoardController {
         try {
             BoardItem boardItem = boardItemService.getBoardItemById(id);
 
-            BoardItemDto result = boardItem.toDto();
+            BoardItem boardItemViewed = boardItemService.viewBoardItem(boardItem);
+
+            BoardItemDto result = boardItemViewed.toDto();
 
             return ResponseEntity.ok(result);
         } catch(NotFoundBoardItemException e) {
@@ -111,5 +124,30 @@ public class BoardController {
         BoardItemDto result = boardItem.toDto();
 
         return ResponseEntity.ok(result);
+    }
+
+    /**
+     *  DELETE
+     */
+
+    /**
+     * 글 삭제
+     * @param id
+     * long
+     * @return
+     * void
+     */
+    @RequestMapping(
+            value = "deleteBoardItemById/{id}",
+            method = RequestMethod.DELETE
+    )
+    public ResponseEntity deleteBoardItemById(@PathVariable("id") long id) {
+        try {
+            boardItemService.deleteBoardItemById(id);
+
+            return ResponseEntity.ok().build();
+        } catch(NotFoundBoardItemException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

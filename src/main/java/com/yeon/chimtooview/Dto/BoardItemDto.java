@@ -15,6 +15,8 @@ public class BoardItemDto {
     private long id;
 
     private String userId;
+    private String userPw;
+    private String salt;
     private LocalDateTime publishedAt;
 
     private String title;
@@ -23,4 +25,5 @@ public class BoardItemDto {
     private int viewCount;
 
     private List<CommentItemDto> commentItemList = new ArrayList<>();
+    private int commentItemCount;
 }

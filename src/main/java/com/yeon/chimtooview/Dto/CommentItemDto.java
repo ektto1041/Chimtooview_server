@@ -13,11 +13,11 @@ public class CommentItemDto {
     private long id;
 
     private String userId;
-//    private String userPw;
-//    private String salt;
+    private String userPw;
+    private String salt;
     private LocalDateTime publishedAt;
 
-    private String title;
+    private String content;
 
     private BoardItemDto boardItemDto;
 }
