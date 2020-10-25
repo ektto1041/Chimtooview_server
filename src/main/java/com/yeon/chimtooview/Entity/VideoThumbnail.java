@@ -1,7 +1,5 @@
 package com.yeon.chimtooview.Entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yeon.chimtooview.Dto.ThumbnailDto;
 import lombok.*;
 

@@ -13,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,11 +65,29 @@ public class VideoService extends QuerydslRepositorySupport {
         return videoRepository.findAllByPlaylist(playlist);
     }
 
-    public long getVideoAllCountByFilter(String searchWord, String searchWordPlaylist) {
+    public long getVideoAllCountByFilter(
+            String startDate, String endDate,
+            int startViewCount, int endViewCount,
+            int startLikeCount, int endLikeCount,
+            int startDislikeCount, int endDislikeCount,
+            String searchWord, String searchWordPlaylist){
         QVideo qVideo = QVideo.video;
 
-        JPQLQuery<Video> query = from(qVideo);
+        JPQLQuery<Video> query = from(qVideo)
+                .where(qVideo.viewCount.between(startViewCount,endViewCount))
+                .where(qVideo.likeCount.between(startLikeCount,endLikeCount))
+                .where(qVideo.dislikeCount.between(startDislikeCount,endDislikeCount));
 
+        // DateRange -> LocalDateTime
+        LocalDate tmpStartDate = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate tmpEndDate = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")).plusDays(1);
+
+        LocalDateTime sDate = tmpStartDate.atStartOfDay();
+        LocalDateTime eDate = tmpEndDate.atStartOfDay();
+
+        query = query.where(qVideo.publishedAt.between(sDate, eDate));
+
+        // 검색어에 __BLANK가 들어왔을 때의 처리
         if(!searchWord.equals("__BLANK")) {
             query = query.where(qVideo.title.contains(searchWord));
         }
@@ -79,8 +101,40 @@ public class VideoService extends QuerydslRepositorySupport {
         return count;
     }
 
-    public QueryResults<Video> getVideoAllOrderByPaging(int category, int order, String searchWord, String searchWordPlaylist, int pageCurrent) {
+    public QueryResults<Video> getVideoAllOrderByPaging(
+            int category, int order,
+            String startDate, String endDate,
+            int startViewCount, int endViewCount,
+            int startLikeCount, int endLikeCount,
+            int startDislikeCount, int endDislikeCount,
+            String searchWord, String searchWordPlaylist,
+            int pageCurrent) {
         QVideo qVideo = QVideo.video;
+
+        JPQLQuery<Video> query = from(qVideo)
+                .where(qVideo.viewCount.between(startViewCount,endViewCount))
+                .where(qVideo.likeCount.between(startLikeCount,endLikeCount))
+                .where(qVideo.dislikeCount.between(startDislikeCount,endDislikeCount));
+
+        // DateRange -> LocalDateTime
+        LocalDate tmpStartDate = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate tmpEndDate = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")).plusDays(1);
+
+        LocalDateTime sDate = tmpStartDate.atStartOfDay();
+        LocalDateTime eDate = tmpEndDate.atStartOfDay();
+
+        query = query.where(qVideo.publishedAt.between(sDate, eDate));
+
+        // 검색어가 __BLANK 가 아닐 경우의 처리 (검색어가 제대로 입력되었을 때)
+        if(!searchWord.equals("__BLANK")) {
+            query = query.where(qVideo.title.contains(searchWord));
+        }
+
+        if(!searchWordPlaylist.equals("__BLANK")) {
+            query = query.where(qVideo.playlist.title.contains(searchWordPlaylist));
+        }
+
+        // Sorting
         OrderSpecifier orderSpecifier = null;
 
         if(category == Constants.DATE) {
@@ -121,16 +175,7 @@ public class VideoService extends QuerydslRepositorySupport {
             orderSpecifier = (order == 0) ? numberPath.asc() : numberPath.desc();
         }
 
-        JPQLQuery<Video> query = from(qVideo).orderBy(orderSpecifier).offset(50 * (pageCurrent-1)).limit(50);
-
-        // 검색어가 __BLANK 가 아닐 경우의 처리 (검색어가 제대로 입력되었을 때)
-        if(!searchWord.equals("__BLANK")) {
-            query = query.where(qVideo.title.contains(searchWord));
-        }
-
-        if(!searchWordPlaylist.equals("__BLANK")) {
-            query = query.where(qVideo.playlist.title.contains(searchWordPlaylist));
-        }
+        query = query.orderBy(orderSpecifier).offset(50 * (pageCurrent-1)).limit(50);
 
         QueryResults<Video> queryResults = query.fetchResults();
 

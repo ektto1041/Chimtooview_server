@@ -3,7 +3,6 @@ package com.yeon.chimtooview.Dto;
 import com.yeon.chimtooview.Entity.Video;
 import lombok.*;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 @Setter

@@ -73,21 +73,57 @@ public class VideoController {
     }
 
     @RequestMapping(
-            value = "/getVideoAllCountByFilter/{searchWord}/{searchWordPlaylist}",
+            value = "/getVideoAllCountByFilter/" +
+                    "{startDate}/{endDate}/" +
+                    "{startViewCount}/{endViewCount}/" +
+                    "{startLikeCount}/{endLikeCount}/" +
+                    "{startDislikeCount}/{endDislikeCount}/" +
+                    "{searchWord}/{searchWordPlaylist}",
             method = RequestMethod.GET
     )
-    public ResponseEntity getVideoAllCountByFilter(@PathVariable("searchWord") String searchWord, @PathVariable("searchWordPlaylist") String searchWordPlaylist) {
-        long result = videoService.getVideoAllCountByFilter(searchWord, searchWordPlaylist);
+    public ResponseEntity getVideoAllCountByFilter(
+            @PathVariable("startDate") String startDate, @PathVariable("endDate") String endDate,
+            @PathVariable("startViewCount") int startViewCount, @PathVariable("endViewCount") int endViewCount,
+            @PathVariable("startLikeCount") int startLikeCount, @PathVariable("endLikeCount") int endLikeCount,
+            @PathVariable("startDislikeCount") int startDislikeCount, @PathVariable("endDislikeCount") int endDislikeCount,
+            @PathVariable("searchWord") String searchWord, @PathVariable("searchWordPlaylist") String searchWordPlaylist) {
+        long result = videoService.getVideoAllCountByFilter(
+                startDate, endDate,
+                startViewCount, endViewCount,
+                startLikeCount, endLikeCount,
+                startDislikeCount, endDislikeCount,
+                searchWord, searchWordPlaylist);
 
         return ResponseEntity.ok(result);
     }
 
     @RequestMapping(
-            value = "/getVideoAllOrderByPaging/{category}/{order}/{searchWord}/{searchWordPlaylist}/{pageCurrent}",
+            value = "/getVideoAllOrderByPaging/" +
+                    "{category}/{order}/" +
+                    "{startDate}/{endDate}/" +
+                    "{startViewCount}/{endViewCount}/" +
+                    "{startLikeCount}/{endLikeCount}/" +
+                    "{startDislikeCount}/{endDislikeCount}/" +
+                    "{searchWord}/{searchWordPlaylist}/" +
+                    "{pageCurrent}",
             method = RequestMethod.GET
     )
-    public ResponseEntity getVideoAllOrderByPaging(@PathVariable("category") int category, @PathVariable("order") int order, @PathVariable("searchWord") String searchWord, @PathVariable("searchWordPlaylist") String searchWordPlaylist, @PathVariable("pageCurrent") int pageCurrent) {
-        QueryResults<Video> queryResults = videoService.getVideoAllOrderByPaging(category, order, searchWord, searchWordPlaylist, pageCurrent);
+    public ResponseEntity getVideoAllOrderByPaging(
+            @PathVariable("category") int category, @PathVariable("order") int order,
+            @PathVariable("startDate") String startDate, @PathVariable("endDate") String endDate,
+            @PathVariable("startViewCount") int startViewCount, @PathVariable("endViewCount") int endViewCount,
+            @PathVariable("startLikeCount") int startLikeCount, @PathVariable("endLikeCount") int endLikeCount,
+            @PathVariable("startDislikeCount") int startDislikeCount, @PathVariable("endDislikeCount") int endDislikeCount,
+            @PathVariable("searchWord") String searchWord, @PathVariable("searchWordPlaylist") String searchWordPlaylist,
+            @PathVariable("pageCurrent") int pageCurrent) {
+        QueryResults<Video> queryResults = videoService.getVideoAllOrderByPaging(
+                category, order,
+                startDate, endDate,
+                startViewCount, endViewCount,
+                startLikeCount, endLikeCount,
+                startDislikeCount, endDislikeCount,
+                searchWord, searchWordPlaylist,
+                pageCurrent);
         List<Video> videoList = queryResults.getResults();
 
         List<VideoDto> result = new ArrayList<>();

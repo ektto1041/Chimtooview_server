@@ -1,6 +1,5 @@
 package com.yeon.chimtooview.Service;
 
-import com.querydsl.jpa.JPQLQuery;
 import com.yeon.chimtooview.Entity.BoardItem;
 import com.yeon.chimtooview.Entity.CommentItem;
 import com.yeon.chimtooview.Entity.QCommentItem;

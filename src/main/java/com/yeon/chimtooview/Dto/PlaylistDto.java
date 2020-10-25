@@ -3,7 +3,6 @@ package com.yeon.chimtooview.Dto;
 import com.yeon.chimtooview.Entity.Playlist;
 import lombok.*;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
