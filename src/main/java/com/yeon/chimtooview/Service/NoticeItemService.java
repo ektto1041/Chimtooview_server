@@ -2,6 +2,8 @@ package com.yeon.chimtooview.Service;
 
 import com.yeon.chimtooview.Entity.NoticeItem;
 import com.yeon.chimtooview.Entity.QNoticeItem;
+import com.yeon.chimtooview.Exceptions.ExceptionMessage;
+import com.yeon.chimtooview.Exceptions.NotFoundNoticeItemException;
 import com.yeon.chimtooview.Repository.NoticeItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -17,10 +19,26 @@ public class NoticeItemService extends QuerydslRepositorySupport {
     @Autowired
     private NoticeItemRepository noticeItemRepository;
 
+    /**
+     *  GET
+     */
+
+    /**
+     * 모든 공지사항의 개수를 가져오는 API
+     * @return
+     * long
+     */
     public long getNoticeAllCount() {
         return noticeItemRepository.count();
     }
 
+    /**
+     * 모든 공지사항을 OrderBy Paging 해서 가져옴
+     * @param pageCurrent
+     * int
+     * @return
+     * NoticeItem List
+     */
     public List<NoticeItem> getNoticeAllOrderByPaging(int pageCurrent) {
         QNoticeItem qNoticeItem = QNoticeItem.noticeItem;
 
@@ -29,6 +47,32 @@ public class NoticeItemService extends QuerydslRepositorySupport {
         return noticeItemList;
     }
 
+    /**
+     * 가장 최신의 공지사항 가져옴
+     * @return
+     * NoticeItem
+     * @throws NotFoundNoticeItemException
+     */
+    public NoticeItem getNoticeItemNew() throws NotFoundNoticeItemException {
+        QNoticeItem qNoticeItem = QNoticeItem.noticeItem;
+
+        NoticeItem noticeItem = from(qNoticeItem).orderBy(qNoticeItem.publishedAt.desc()).limit(1).fetchFirst();
+        if(noticeItem == null) throw new NotFoundNoticeItemException(ExceptionMessage.NF_NOTICE_ITEM);
+
+        return noticeItem;
+    }
+
+    /**
+     *  POST
+     */
+
+    /**
+     * 공지사항 쓰기
+     * @param newNoticeItem
+     * String List 0: title, 1: content, 2: type
+     * @return
+     * NoticeItem
+     */
     public NoticeItem postNoticeItem(List<String> newNoticeItem) {
         NoticeItem noticeItem = new NoticeItem();
         noticeItem.setTitle(newNoticeItem.get(0));
