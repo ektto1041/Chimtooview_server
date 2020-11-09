@@ -21,6 +21,8 @@ public class Playlist {
     @Id
     @Column(name = "PLAYLIST_ID")
     private String id;
+    @Column(name = "OWNERS")
+    private int owners;
 
     @Column(name = "TITLE")
     private String title;
@@ -55,6 +57,7 @@ public class Playlist {
         PlaylistDto dto = new PlaylistDto();
 
         dto.setId(id);
+        dto.setOwners(owners);
         dto.setTitle(title);
         dto.setDescription(description);
         dto.setPublishedAt(publishedAt);

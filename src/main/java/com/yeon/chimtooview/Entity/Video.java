@@ -18,6 +18,8 @@ public class Video {
     @Id
     @Column(name = "VIDEO_ID")
     private String id;
+    @Column(name = "OWNERS")
+    private int owners;
 
     @Column(name = "TITLE")
     private String title;
@@ -59,6 +61,7 @@ public class Video {
     public VideoDto toDto() {
         VideoDto dto = new VideoDto();
         dto.setId(id);
+        dto.setOwners(owners);
         dto.setTitle(title);
         dto.setPublishedAt(publishedAt);
         dto.setDuration(duration);

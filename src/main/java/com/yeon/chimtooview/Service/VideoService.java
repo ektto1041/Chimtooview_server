@@ -32,7 +32,7 @@ public class VideoService extends QuerydslRepositorySupport {
     }
 
     // 요약 화면의 TopFive 를 구성하기 위해 DB에서 Sort하여 Data를 가져오는 Service
-    public List<List<Video>> getVideoAllForTopFive() {
+    public List<List<Video>> getVideoAllForTopFive(int owner) {
         // TODO 이거 개선하자 아니면 아예 요약 페이지를 바꿔버리자
 //        DATE: 0,
 //        VIEW_COUNT: 1,
@@ -49,14 +49,14 @@ public class VideoService extends QuerydslRepositorySupport {
 
         List<List<Video>> topFiveVideoList = new ArrayList<>();
 
-        topFiveVideoList.add(from(qVideo).orderBy(qVideo.publishedAt.desc()).limit(5).fetch());
-        topFiveVideoList.add(from(qVideo).orderBy(qVideo.viewCount.desc()).limit(5).fetch());
-        topFiveVideoList.add(from(qVideo).orderBy(qVideo.likeCount.desc()).limit(5).fetch());
-        topFiveVideoList.add(from(qVideo).orderBy(qVideo.dislikeCount.desc()).limit(5).fetch());
-        topFiveVideoList.add(from(qVideo).orderBy(qVideo.likeDislikeRate.desc()).limit(5).fetch());
-        topFiveVideoList.add(from(qVideo).orderBy(qVideo.likeDislikeGap.desc()).limit(5).fetch());
-        topFiveVideoList.add(from(qVideo).orderBy(qVideo.viewLikeRate.desc()).limit(5).fetch());
-        topFiveVideoList.add(from(qVideo).orderBy(qVideo.viewLikeGap.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).where(qVideo.owners.eq(owner)).orderBy(qVideo.publishedAt.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).where(qVideo.owners.eq(owner)).orderBy(qVideo.viewCount.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).where(qVideo.owners.eq(owner)).orderBy(qVideo.likeCount.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).where(qVideo.owners.eq(owner)).orderBy(qVideo.dislikeCount.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).where(qVideo.owners.eq(owner)).orderBy(qVideo.likeDislikeRate.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).where(qVideo.owners.eq(owner)).orderBy(qVideo.likeDislikeGap.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).where(qVideo.owners.eq(owner)).orderBy(qVideo.viewLikeRate.desc()).limit(5).fetch());
+        topFiveVideoList.add(from(qVideo).where(qVideo.owners.eq(owner)).orderBy(qVideo.viewLikeGap.desc()).limit(5).fetch());
 
         return topFiveVideoList;
     }
@@ -66,6 +66,7 @@ public class VideoService extends QuerydslRepositorySupport {
     }
 
     public long getVideoAllCountByFilter(
+            int ownerId,
             String startDate, String endDate,
             int startViewCount, int endViewCount,
             int startLikeCount, int endLikeCount,
@@ -74,6 +75,7 @@ public class VideoService extends QuerydslRepositorySupport {
         QVideo qVideo = QVideo.video;
 
         JPQLQuery<Video> query = from(qVideo)
+                .where(qVideo.owners.eq(ownerId))
                 .where(qVideo.viewCount.between(startViewCount,endViewCount))
                 .where(qVideo.likeCount.between(startLikeCount,endLikeCount))
                 .where(qVideo.dislikeCount.between(startDislikeCount,endDislikeCount));
@@ -102,6 +104,7 @@ public class VideoService extends QuerydslRepositorySupport {
     }
 
     public QueryResults<Video> getVideoAllOrderByPaging(
+            int ownerId,
             int category, int order,
             String startDate, String endDate,
             int startViewCount, int endViewCount,
@@ -112,6 +115,7 @@ public class VideoService extends QuerydslRepositorySupport {
         QVideo qVideo = QVideo.video;
 
         JPQLQuery<Video> query = from(qVideo)
+                .where(qVideo.owners.eq(ownerId))
                 .where(qVideo.viewCount.between(startViewCount,endViewCount))
                 .where(qVideo.likeCount.between(startLikeCount,endLikeCount))
                 .where(qVideo.dislikeCount.between(startDislikeCount,endDislikeCount));

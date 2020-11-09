@@ -18,4 +18,8 @@ public class Constants {
     public static final int LIKE_COUNT_AVG = 103;
     public static final int DISLIKE_COUNT_SUM = 104;
     public static final int DISLIKE_COUNT_AVG = 105;
+
+    // OWNER
+    public static final int CHIM = 0;
+    public static final int OK = 1;
 }

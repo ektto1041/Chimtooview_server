@@ -46,11 +46,11 @@ public class VideoController {
     }
 
     @RequestMapping(
-            value = "/getVideoAllForTopFive",
+            value = "/getVideoAllForTopFive/{owner}",
             method = RequestMethod.GET
     )
-    public ResponseEntity getVideoAllForTopFive() {
-        List<List<Video>> topFiveVideoList = videoService.getVideoAllForTopFive();
+    public ResponseEntity getVideoAllForTopFive(@PathVariable("owner") int owner) {
+        List<List<Video>> topFiveVideoList = videoService.getVideoAllForTopFive(owner);
 
         List<List<VideoDto>> result = new ArrayList<>();
         for(List<Video> videoList : topFiveVideoList) {
@@ -74,6 +74,7 @@ public class VideoController {
 
     @RequestMapping(
             value = "/getVideoAllCountByFilter/" +
+                    "{ownerId}/" +
                     "{startDate}/{endDate}/" +
                     "{startViewCount}/{endViewCount}/" +
                     "{startLikeCount}/{endLikeCount}/" +
@@ -82,12 +83,14 @@ public class VideoController {
             method = RequestMethod.GET
     )
     public ResponseEntity getVideoAllCountByFilter(
+            @PathVariable("ownerId") int ownerId,
             @PathVariable("startDate") String startDate, @PathVariable("endDate") String endDate,
             @PathVariable("startViewCount") int startViewCount, @PathVariable("endViewCount") int endViewCount,
             @PathVariable("startLikeCount") int startLikeCount, @PathVariable("endLikeCount") int endLikeCount,
             @PathVariable("startDislikeCount") int startDislikeCount, @PathVariable("endDislikeCount") int endDislikeCount,
             @PathVariable("searchWord") String searchWord, @PathVariable("searchWordPlaylist") String searchWordPlaylist) {
         long result = videoService.getVideoAllCountByFilter(
+                ownerId,
                 startDate, endDate,
                 startViewCount, endViewCount,
                 startLikeCount, endLikeCount,
@@ -99,6 +102,7 @@ public class VideoController {
 
     @RequestMapping(
             value = "/getVideoAllOrderByPaging/" +
+                    "{ownerId}/" +
                     "{category}/{order}/" +
                     "{startDate}/{endDate}/" +
                     "{startViewCount}/{endViewCount}/" +
@@ -109,6 +113,7 @@ public class VideoController {
             method = RequestMethod.GET
     )
     public ResponseEntity getVideoAllOrderByPaging(
+            @PathVariable("ownerId") int ownerId,
             @PathVariable("category") int category, @PathVariable("order") int order,
             @PathVariable("startDate") String startDate, @PathVariable("endDate") String endDate,
             @PathVariable("startViewCount") int startViewCount, @PathVariable("endViewCount") int endViewCount,
@@ -117,6 +122,7 @@ public class VideoController {
             @PathVariable("searchWord") String searchWord, @PathVariable("searchWordPlaylist") String searchWordPlaylist,
             @PathVariable("pageCurrent") int pageCurrent) {
         QueryResults<Video> queryResults = videoService.getVideoAllOrderByPaging(
+                ownerId,
                 category, order,
                 startDate, endDate,
                 startViewCount, endViewCount,

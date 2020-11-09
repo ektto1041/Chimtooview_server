@@ -14,6 +14,7 @@ import java.util.List;
 @ToString
 public class PlaylistDto {
     private String id;
+    private int owners;
 
     private String title;
     private String description;
@@ -33,6 +34,7 @@ public class PlaylistDto {
     public Playlist toEntity() {
         Playlist entity = new Playlist();
         entity.setId(id);
+        entity.setOwners(owners);
         entity.setTitle(title);
         entity.setDescription(description);
         entity.setPublishedAt(publishedAt);

@@ -32,10 +32,10 @@ public class PlaylistService extends QuerydslRepositorySupport {
         return playlistRepository.findAll();
     }
 
-    public long getPlaylistAllCountByFilter(String searchWord) {
+    public long getPlaylistAllCountByFilter(int ownerId, String searchWord) {
         QPlaylist qPlaylist = QPlaylist.playlist;
 
-        JPQLQuery<Playlist> query = from(qPlaylist);
+        JPQLQuery<Playlist> query = from(qPlaylist).where(qPlaylist.owners.eq(ownerId));
 
         if(!searchWord.equals("__BLANK")) {
             query = query.where(qPlaylist.title.contains(searchWord));
@@ -46,11 +46,11 @@ public class PlaylistService extends QuerydslRepositorySupport {
         return count;
     }
 
-    public List<Playlist> getPlaylistAllOrderByPaging(int category, int order, String searchWord, int pageCurrent) {
+    public List<Playlist> getPlaylistAllOrderByPaging(int ownerId, int category, int order, String searchWord, int pageCurrent) {
         QPlaylist qPlaylist = QPlaylist.playlist;
 
         // 쿼리문
-        JPQLQuery<Playlist> query = from(qPlaylist);
+        JPQLQuery<Playlist> query = from(qPlaylist).where(qPlaylist.owners.eq(ownerId));
 
         // 검색어 조건
         if(!searchWord.equals("__BLANK")) {

@@ -69,21 +69,21 @@ public class PlaylistController {
     }
 
     @RequestMapping(
-            value = "/getPlaylistAllCountByFilter/{searchWord}",
+            value = "/getPlaylistAllCountByFilter/{ownerId}/{searchWord}",
             method = RequestMethod.GET
     )
-    public ResponseEntity getPlaylistAllCountByFilter(@PathVariable("searchWord") String searchWord) {
-        long result = playlistService.getPlaylistAllCountByFilter(searchWord);
+    public ResponseEntity getPlaylistAllCountByFilter(@PathVariable("ownerId") int ownerId, @PathVariable("searchWord") String searchWord) {
+        long result = playlistService.getPlaylistAllCountByFilter(ownerId, searchWord);
 
         return ResponseEntity.ok(result);
     }
 
     @RequestMapping(
-            value = "/getPlaylistAllOrderByPaging/{category}/{order}/{searchWord}/{pageCurrent}",
+            value = "/getPlaylistAllOrderByPaging/{ownerId}/{category}/{order}/{searchWord}/{pageCurrent}",
             method = RequestMethod.GET
     )
-    public ResponseEntity getPlaylistAllOrderByPaging(@PathVariable("category") int category, @PathVariable("order") int order, @PathVariable("searchWord") String searchWord, @PathVariable("pageCurrent") int pageCurrent) {
-        List<Playlist> playlistList = playlistService.getPlaylistAllOrderByPaging(category, order, searchWord, pageCurrent);
+    public ResponseEntity getPlaylistAllOrderByPaging(@PathVariable("ownerId") int ownerId, @PathVariable("category") int category, @PathVariable("order") int order, @PathVariable("searchWord") String searchWord, @PathVariable("pageCurrent") int pageCurrent) {
+        List<Playlist> playlistList = playlistService.getPlaylistAllOrderByPaging(ownerId, category, order, searchWord, pageCurrent);
 
         List<PlaylistDto> result = new ArrayList<>();
         for(Playlist playlist : playlistList) {

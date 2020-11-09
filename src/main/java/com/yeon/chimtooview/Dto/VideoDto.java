@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @ToString
 public class VideoDto {
     private String id;
+    private int owners;
 
     private String title;
     private LocalDateTime publishedAt;
@@ -37,6 +38,7 @@ public class VideoDto {
     public Video toEntity() {
         Video entity = new Video();
         entity.setId(id);
+        entity.setOwners(owners);
         entity.setTitle(title);
         entity.setPublishedAt(publishedAt);
         entity.setDuration(duration);
